@@ -2,6 +2,8 @@ package com.ericsospedra.retrofitrickymorty.interfaces;
 
 import com.ericsospedra.retrofitrickymorty.models.Character;
 import com.ericsospedra.retrofitrickymorty.models.CharacterResult;
+import com.ericsospedra.retrofitrickymorty.models.Episode;
+import com.ericsospedra.retrofitrickymorty.models.EpisodeResult;
 
 
 import retrofit2.Call;
@@ -19,4 +21,10 @@ public interface IApiService {
 
     @GET("character/")
     public Call<CharacterResult> getCharacterByPages(@Query("page") int page);
+
+    @GET("episode")
+    public Call<EpisodeResult> getEpisodes();
+
+    @GET("episode/{id}")
+    public Call<Episode> getEpisodeById(@Path("id") int id);
 }

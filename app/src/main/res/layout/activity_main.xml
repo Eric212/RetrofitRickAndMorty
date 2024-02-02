@@ -13,27 +13,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/ivFrontCover"
-        android:layout_width="0dp"
-        android:layout_height="244dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/rickandmorty"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tbMenu"
-        tools:srcCompat="@drawable/rickandmorty" />
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcvMain"
         android:name="com.ericsospedra.retrofitrickymorty.fragments.StartMenuFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivFrontCover" />
+        app:layout_constraintTop_toBottomOf="@+id/tbMenu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

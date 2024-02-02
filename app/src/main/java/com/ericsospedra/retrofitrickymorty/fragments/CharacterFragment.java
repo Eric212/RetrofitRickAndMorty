@@ -55,14 +55,14 @@ public class CharacterFragment extends Fragment {
             public void onResponse(Call<CharacterResult> call, Response<CharacterResult> response) {
                 if (response.isSuccessful()) {
                     characters =new ArrayList<>();
-                    Result<Character> result = response.body();
+                    CharacterResult result = response.body();
                     for(int i = 0; i<=result.getInfo().getPages();i++){
                         int finalI = i;
                         api.getCharacterByPages(i).enqueue(new Callback<CharacterResult>() {
                             @Override
                             public void onResponse(Call<CharacterResult> call, Response<CharacterResult> response) {
                                 characters.addAll(response.body().getResults());
-                                if(finalI ==result.getInfo().getPages()){
+                                if(finalI == result.getInfo().getPages()){
                                     RecyclerView rvAuthor = view.findViewById(R.id.rvCharacter);
                                     adapter = new CharacterAdapter(characters, listener);
                                     rvAuthor.setAdapter(adapter);

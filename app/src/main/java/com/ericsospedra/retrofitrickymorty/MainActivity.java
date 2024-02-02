@@ -1,10 +1,9 @@
 package com.ericsospedra.retrofitrickymorty;
 
-import android.app.FragmentContainer;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 
+import androidx.activity.OnBackPressedDispatcherOwner;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -12,7 +11,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.ericsospedra.retrofitrickymorty.fragments.CharacterDetailFragment;
 import com.ericsospedra.retrofitrickymorty.fragments.CharacterFragment;
-import com.ericsospedra.retrofitrickymorty.fragments.EpisodeFragment;
+import com.ericsospedra.retrofitrickymorty.fragments.EpisodeDetailFragment;
 import com.ericsospedra.retrofitrickymorty.fragments.LocationFragment;
 import com.ericsospedra.retrofitrickymorty.fragments.StartMenuFragment;
 import com.ericsospedra.retrofitrickymorty.interfaces.IApiService;
@@ -23,9 +22,15 @@ import com.ericsospedra.retrofitrickymorty.models.StartMenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements StartMenuFragment.IOnAttach, IOnClickListener, CharacterDetailFragment.IOnAttach {
+public class MainActivity extends AppCompatActivity implements StartMenuFragment.IOnAttach,
+        IOnClickListener,
+        CharacterDetailFragment.IOnAttach,
+        EpisodeDetailFragment.IOnAttach {
     private FragmentManager manager;
     private Toolbar toolbar;
+    private int episodeId;
+    private int episodeCharacterId=0;
+
     private enum START_MENU_ITEM {Characters, Locations, Episodes}
     private IApiService api;
     private ImageView ivFrontCover;
@@ -39,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements StartMenuFragment
         manager = getSupportFragmentManager();
         toolbar = findViewById(R.id.tbMenu);
         toolbar.setTitle("Rick and Morty");
-        ivFrontCover = findViewById(R.id.ivFrontCover);
     }
 
     public List<StartMenuItem> getList() {
@@ -58,22 +62,31 @@ public class MainActivity extends AppCompatActivity implements StartMenuFragment
             if (f instanceof StartMenuFragment) {
                 if (s.equals(START_MENU_ITEM.Characters.toString())) {
                     manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, CharacterFragment.class, null).commit();
-                    ivFrontCover.setVisibility(View.GONE);
                 } else if (s.equals(START_MENU_ITEM.Locations.toString())) {
                     manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, LocationFragment.class, null).commit();
-                    ivFrontCover.setVisibility(View.GONE);
                 } else {
-                    manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, EpisodeFragment.class, null).commit();
-                    ivFrontCover.setVisibility(View.GONE);
+                    manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, EpisodeDetailFragment.class, null).commit();
                 }
             }else if(f instanceof CharacterFragment){
                 characterId = Integer.parseInt(s);
                 manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, CharacterDetailFragment.class,null).commit();
+            }else if(f instanceof CharacterDetailFragment){
+                episodeId = Integer.parseInt(s);
+                manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, EpisodeDetailFragment.class,null).commit();
+            } else if (f instanceof EpisodeDetailFragment) {
+                episodeCharacterId = Integer.parseInt(s);
+                manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain,CharacterDetailFragment.class,null).commit();
             }
         }
     }
     @Override
     public int getCharacterId() {
-        return characterId;
+        if (episodeCharacterId != 0) {
+            return episodeCharacterId;
+        } else {
+            return characterId;
+        }
     }
+    @Override
+    public int getEpisodeId(){return episodeId;}
 }

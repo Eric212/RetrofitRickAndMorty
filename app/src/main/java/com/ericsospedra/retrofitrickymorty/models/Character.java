@@ -16,9 +16,6 @@ public class Character {
     private String url;
     private String created;
 
-    public Character() {
-    }
-
     public Character(int id, String name, String status, String species, String type, String gender, String image, Origin origin, Location location, List<String> episode, String url, String created) {
         this.id = id;
         this.name = name;
@@ -33,55 +30,6 @@ public class Character {
         this.url = url;
         this.created = created;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setSpecies(String species) {
-        this.species = species;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public void setOrigin(Origin origin) {
-        this.origin = origin;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public void setEpisode(List<String> episode) {
-        this.episode = episode;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void setCreated(String created) {
-        this.created = created;
-    }
-
     public int getId() {
         return id;
     }
@@ -129,7 +77,6 @@ public class Character {
     public String getCreated() {
         return created;
     }
-
     @Override
     public String toString() {
         return "Character{" +

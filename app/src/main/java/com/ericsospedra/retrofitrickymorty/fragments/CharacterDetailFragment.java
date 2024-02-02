@@ -4,25 +4,32 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ericsospedra.retrofitrickymorty.R;
-import com.ericsospedra.retrofitrickymorty.adapters.EpisodeArrayAdapter;
+import com.ericsospedra.retrofitrickymorty.adapters.EpisodeLiteAdapter;
 import com.ericsospedra.retrofitrickymorty.interfaces.IApiService;
+import com.ericsospedra.retrofitrickymorty.interfaces.IOnClickListener;
 import com.ericsospedra.retrofitrickymorty.models.ApiRickAndMorty;
 import com.ericsospedra.retrofitrickymorty.models.Character;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CharacterDetailFragment extends Fragment {
+    private IOnClickListener listener;
+
     public interface IOnAttach{
         int getCharacterId();
     }
@@ -36,7 +43,8 @@ public class CharacterDetailFragment extends Fragment {
     private TextView tvStatus;
     private TextView tvOrigin;
     private TextView tvLocation;
-    private ListView lvEpisodes;
+    private RecyclerView rvEpisode;
+    private List<String> episodesURL;
 
     public CharacterDetailFragment() {
         super(R.layout.character_detail_fragment);
@@ -53,14 +61,14 @@ public class CharacterDetailFragment extends Fragment {
         tvStatus = view.findViewById(R.id.tvStatus);
         tvOrigin = view.findViewById(R.id.tvOrigin);
         tvLocation = view.findViewById(R.id.tvLocation);
-        lvEpisodes = view.findViewById(R.id.lvEpisodes);
+        rvEpisode = view.findViewById(R.id.rvEpisode);
         api = ApiRickAndMorty.getInstance();
         api.getCharacter(characterId).enqueue(new Callback<Character>() {
             @Override
             public void onResponse(Call<Character> call, Response<Character> response) {
                 Character c = response.body();
                 Picasso.get().load(c.getImage()).into(ivDetailCharacter);
-                ivDetailCharacter.getLayoutParams().width=512;
+                ivDetailCharacter.getLayoutParams().width= 512;
                 ivDetailCharacter.getLayoutParams().height =512;
                 tvName.setText(c.getName());
                 tvGender.setText(c.getGender());
@@ -69,7 +77,14 @@ public class CharacterDetailFragment extends Fragment {
                 tvStatus.setText(c.getStatus());
                 tvOrigin.setText(c.getOrigin().getName());
                 tvLocation.setText(c.getLocation().getName());
-                //EpisodeArrayAdapter adapter = new EpisodeArrayAdapter(getContext(),c.);
+                List<String>
+                for(String episode : episodesURL){
+
+                }
+                EpisodeLiteAdapter adapter = new EpisodeLiteAdapter(,listener);
+                rvEpisode.setAdapter(adapter);
+                rvEpisode.setLayoutManager(new LinearLayoutManager(view.getContext(),LinearLayoutManager.VERTICAL,false));
+                rvEpisode.addItemDecoration(new DividerItemDecoration(view.getContext(),DividerItemDecoration.VERTICAL));
             }
 
             @Override
@@ -84,5 +99,6 @@ public class CharacterDetailFragment extends Fragment {
         super.onAttach(context);
         IOnAttach iOnAttach = (IOnAttach) context;
         characterId = iOnAttach.getCharacterId();
+        listener = (IOnClickListener) context;
     }
 }
