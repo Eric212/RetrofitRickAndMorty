@@ -6,88 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/ivCharacter"
-        android:layout_width="158dp"
-        android:layout_height="159dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+    <include
+        android:id="@+id/tbMenu"
+        layout="@layout/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/ivCharacter"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/ivCharacter"
-        app:layout_constraintTop_toBottomOf="@+id/tvName" />
-
-    <TextView
-        android:id="@+id/tvSpecies"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/ivCharacter"
-        app:layout_constraintTop_toBottomOf="@+id/tvStatus" />
-
-    <TextView
-        android:id="@+id/tvGender"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/ivCharacter"
-        app:layout_constraintTop_toBottomOf="@+id/tvSpecies" />
-
-    <TextView
-        android:id="@+id/tvType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/ivCharacter"
-        app:layout_constraintTop_toBottomOf="@+id/tvGender" />
-
-    <Button
-        android:id="@+id/bPrev"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Prev"
-        app:cornerRadius="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/bNext"
-        app:layout_constraintHorizontal_bias="0.2"
+    <ImageView
+        android:id="@+id/ivFrontCover"
+        android:layout_width="0dp"
+        android:layout_height="244dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/rickandmorty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivCharacter"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintTop_toBottomOf="@+id/tbMenu"
+        tools:srcCompat="@drawable/rickandmorty" />
 
-    <Button
-        android:id="@+id/bNext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:text="Next"
-        app:cornerRadius="10dp"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcvMain"
+        android:name="com.ericsospedra.retrofitrickymorty.fragments.StartMenuFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivCharacter"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivFrontCover" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

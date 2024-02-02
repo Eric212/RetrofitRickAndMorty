@@ -1,94 +1,79 @@
 package com.ericsospedra.retrofitrickymorty;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.FragmentContainer;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import com.ericsospedra.retrofitrickymorty.fragments.CharacterDetailFragment;
+import com.ericsospedra.retrofitrickymorty.fragments.CharacterFragment;
+import com.ericsospedra.retrofitrickymorty.fragments.EpisodeFragment;
+import com.ericsospedra.retrofitrickymorty.fragments.LocationFragment;
+import com.ericsospedra.retrofitrickymorty.fragments.StartMenuFragment;
 import com.ericsospedra.retrofitrickymorty.interfaces.IApiService;
+import com.ericsospedra.retrofitrickymorty.interfaces.IOnClickListener;
 import com.ericsospedra.retrofitrickymorty.models.ApiRickAndMorty;
-import com.ericsospedra.retrofitrickymorty.models.Character;
-import com.squareup.picasso.Picasso;
+import com.ericsospedra.retrofitrickymorty.models.StartMenuItem;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    private int currentId = 1;
+public class MainActivity extends AppCompatActivity implements StartMenuFragment.IOnAttach, IOnClickListener, CharacterDetailFragment.IOnAttach {
+    private FragmentManager manager;
+    private Toolbar toolbar;
+    private enum START_MENU_ITEM {Characters, Locations, Episodes}
     private IApiService api;
-    private ImageView ivCharacter;
-    private TextView tvName;
-    private TextView tvGender;
-    private TextView tvStatus;
-    private TextView tvSpecies;
-    private TextView tvType;
-    private Button bPrev;
-    private Button bNext;
+    private ImageView ivFrontCover;
+    private int characterId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         api = ApiRickAndMorty.getInstance();
-        ivCharacter = findViewById(R.id.ivCharacter);
-        tvName = findViewById(R.id.tvName);
-        tvGender = findViewById(R.id.tvGender);
-        tvStatus = findViewById(R.id.tvStatus);
-        tvSpecies = findViewById(R.id.tvSpecies);
-        tvType = findViewById(R.id.tvType);
-        bPrev = findViewById(R.id.bPrev);
-        bPrev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                    currentId--;
-                if (currentId < 1) {
-                    currentId =1;
-                }
-                    showCharacter();
-
-            }
-        });
-        Button bNext = findViewById(R.id.bNext);
-        bNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentId++;
-                showCharacter();
-            }
-        });
-        showCharacter();
+        manager = getSupportFragmentManager();
+        toolbar = findViewById(R.id.tbMenu);
+        toolbar.setTitle("Rick and Morty");
+        ivFrontCover = findViewById(R.id.ivFrontCover);
     }
 
-    public void showCharacter() {
-        api.getCharacter(currentId).enqueue(new Callback<Character>() {
-            @Override
-            public void onResponse(Call<Character> call, Response<Character> response) {
-                if (response.isSuccessful()) {
-                    Character character = response.body();
-                    if (character != null) {
-                        tvName.setText(character.getName());
-                        tvGender.setText(character.getGender());
-                        tvStatus.setText(character.getStatus());
-                        tvSpecies.setText(character.getSpecies());
-                        tvType.setText(character.getType());
-                        Picasso.get().load(character.getImage()).into(ivCharacter);
-                    }
+    public List<StartMenuItem> getList() {
+        List<StartMenuItem> startMenuItemList = new ArrayList<>();
+        for (START_MENU_ITEM item : START_MENU_ITEM.values()) {
+            StartMenuItem startMenuItem = new StartMenuItem(item.toString().toLowerCase(), item.toString());
+            startMenuItemList.add(startMenuItem);
+        }
+        return startMenuItemList;
+    }
+
+    @Override
+    public void onClick(String s) {
+        if (manager != null) {
+            Fragment f = manager.findFragmentById(R.id.fcvMain);
+            if (f instanceof StartMenuFragment) {
+                if (s.equals(START_MENU_ITEM.Characters.toString())) {
+                    manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, CharacterFragment.class, null).commit();
+                    ivFrontCover.setVisibility(View.GONE);
+                } else if (s.equals(START_MENU_ITEM.Locations.toString())) {
+                    manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, LocationFragment.class, null).commit();
+                    ivFrontCover.setVisibility(View.GONE);
+                } else {
+                    manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, EpisodeFragment.class, null).commit();
+                    ivFrontCover.setVisibility(View.GONE);
                 }
+            }else if(f instanceof CharacterFragment){
+                characterId = Integer.parseInt(s);
+                manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, CharacterDetailFragment.class,null).commit();
             }
-
-            @Override
-            public void onFailure(Call<Character> call, Throwable t) {
-
-            }
-        });
+        }
+    }
+    @Override
+    public int getCharacterId() {
+        return characterId;
     }
 }

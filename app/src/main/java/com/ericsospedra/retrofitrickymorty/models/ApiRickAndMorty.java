@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiRickAndMorty{
     private static IApiService instance;
-    private static final String BASE_URL ="http://frases.germangascon.com/";
+    private static final String BASE_URL ="https://rickandmortyapi.com/api/";
 
     private ApiRickAndMorty() {
     }
