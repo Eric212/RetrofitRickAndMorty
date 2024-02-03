@@ -9,11 +9,12 @@ public class EpisodeResult extends Result<Episode>{
 
     @Override
     public Info getInfo() {
-        return null;
+        return info;
     }
 
     @Override
     public List<Episode> getResults() {
-        return null;
+        return results;
     }
+
 }

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/ivEpisode"
+        android:id="@+id/ivLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -15,28 +15,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/episode" />
+        app:srcCompat="@drawable/r_m_defaullt" />
 
     <TextView
-        android:id="@+id/tvSeason"
+        android:id="@+id/tvLocationName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="@+id/ivEpisode"
-        app:layout_constraintStart_toStartOf="@+id/ivEpisode"
-        app:layout_constraintTop_toBottomOf="@+id/ivEpisode" />
-
-    <TextView
-        android:id="@+id/tvEpisode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:text="TextView"
-        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/ivEpisode"
-        app:layout_constraintStart_toStartOf="@+id/ivEpisode"
-        app:layout_constraintTop_toBottomOf="@+id/tvSeason" />
+        app:layout_constraintEnd_toEndOf="@+id/ivLocation"
+        app:layout_constraintStart_toStartOf="@+id/ivLocation"
+        app:layout_constraintTop_toBottomOf="@+id/ivLocation" />
 </androidx.constraintlayout.widget.ConstraintLayout>

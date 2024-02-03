@@ -78,7 +78,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Auth
 
         @Override
         public void onClick(View v) {
-            listener.onClick(String.valueOf(getAdapterPosition()+1));
+            listener.onClick(String.valueOf(characters.get(getAdapterPosition()).getId()));
         }
     }
 }

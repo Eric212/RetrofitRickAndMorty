@@ -21,11 +21,6 @@ public class Origin {
         this.created = created;
     }
 
-    public Origin(String name, String url) {
-        this.name = name;
-        this.url = url;
-    }
-
     public String getName() {
         return name;
     }
@@ -34,7 +29,7 @@ public class Origin {
         return url;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -52,5 +47,18 @@ public class Origin {
 
     public String getCreated() {
         return created;
+    }
+
+    @Override
+    public String toString() {
+        return "Origin{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", dimension='" + dimension + '\'' +
+                ", residents=" + residents +
+                ", url='" + url + '\'' +
+                ", created='" + created + '\'' +
+                '}';
     }
 }

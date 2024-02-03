@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">RetrofitRickYMorty</string>
     <string name="rickandmorty">rickAndMorty</string>
+    <string name="nombre">Nombre:</string>
+    <string name="dia_de_lanzamiento">Dia de lanzamiento</string>
+    <string name="episodio">Episodio</string>
+    <string name="personajes_del_episodio">Personajes del episodio</string>
 </resources>

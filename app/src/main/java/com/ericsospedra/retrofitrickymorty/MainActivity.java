@@ -3,7 +3,6 @@ package com.ericsospedra.retrofitrickymorty;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import androidx.activity.OnBackPressedDispatcherOwner;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -12,6 +11,8 @@ import androidx.fragment.app.FragmentManager;
 import com.ericsospedra.retrofitrickymorty.fragments.CharacterDetailFragment;
 import com.ericsospedra.retrofitrickymorty.fragments.CharacterFragment;
 import com.ericsospedra.retrofitrickymorty.fragments.EpisodeDetailFragment;
+import com.ericsospedra.retrofitrickymorty.fragments.EpisodeFragment;
+import com.ericsospedra.retrofitrickymorty.fragments.LocationDetailFragment;
 import com.ericsospedra.retrofitrickymorty.fragments.LocationFragment;
 import com.ericsospedra.retrofitrickymorty.fragments.StartMenuFragment;
 import com.ericsospedra.retrofitrickymorty.interfaces.IApiService;
@@ -21,26 +22,22 @@ import com.ericsospedra.retrofitrickymorty.models.StartMenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements StartMenuFragment.IOnAttach,
         IOnClickListener,
         CharacterDetailFragment.IOnAttach,
-        EpisodeDetailFragment.IOnAttach {
+        EpisodeDetailFragment.IOnAttach,
+        LocationDetailFragment.IOnAttach {
+    private Stack<Integer> idsStack = new Stack<>();
     private FragmentManager manager;
     private Toolbar toolbar;
-    private int episodeId;
-    private int episodeCharacterId=0;
-
     private enum START_MENU_ITEM {Characters, Locations, Episodes}
-    private IApiService api;
-    private ImageView ivFrontCover;
-    private int characterId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        api = ApiRickAndMorty.getInstance();
         manager = getSupportFragmentManager();
         toolbar = findViewById(R.id.tbMenu);
         toolbar.setTitle("Rick and Morty");
@@ -65,28 +62,36 @@ public class MainActivity extends AppCompatActivity implements StartMenuFragment
                 } else if (s.equals(START_MENU_ITEM.Locations.toString())) {
                     manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, LocationFragment.class, null).commit();
                 } else {
-                    manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, EpisodeDetailFragment.class, null).commit();
+                    manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, EpisodeFragment.class, null).commit();
                 }
             }else if(f instanceof CharacterFragment){
-                characterId = Integer.parseInt(s);
+                idsStack.push(Integer.parseInt(s));
                 manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, CharacterDetailFragment.class,null).commit();
             }else if(f instanceof CharacterDetailFragment){
-                episodeId = Integer.parseInt(s);
+                idsStack.push(Integer.parseInt(s));
                 manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain, EpisodeDetailFragment.class,null).commit();
             } else if (f instanceof EpisodeDetailFragment) {
-                episodeCharacterId = Integer.parseInt(s);
+                idsStack.push(Integer.parseInt(s));
                 manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain,CharacterDetailFragment.class,null).commit();
+            } else if (f instanceof EpisodeFragment) {
+                idsStack.push(Integer.parseInt(s));
+                manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain,EpisodeDetailFragment.class,null).commit();
+            }else if (f instanceof LocationFragment){
+                idsStack.push(Integer.parseInt(s));
+                manager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fcvMain,LocationDetailFragment.class,null).commit();
             }
         }
     }
     @Override
     public int getCharacterId() {
-        if (episodeCharacterId != 0) {
-            return episodeCharacterId;
-        } else {
-            return characterId;
-        }
+        return idsStack.pop();
     }
     @Override
-    public int getEpisodeId(){return episodeId;}
+    public int getEpisodeId(){
+        return idsStack.pop();
+    }
+    @Override
+    public int getLocationId() {
+        return idsStack.pop();
+    }
 }

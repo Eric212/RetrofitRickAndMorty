@@ -3,7 +3,7 @@ package com.ericsospedra.retrofitrickymorty.models;
 import java.util.List;
 
 public class Episode {
-    private int id;
+    private Integer id;
     private String name;
     private String air_date;
     private String episode;
@@ -21,7 +21,7 @@ public class Episode {
         this.created = created;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -47,5 +47,18 @@ public class Episode {
 
     public String getCreated() {
         return created;
+    }
+
+    @Override
+    public String toString() {
+        return "Episode{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", air_date='" + air_date + '\'' +
+                ", episode='" + episode + '\'' +
+                ", characters=" + characters +
+                ", url='" + url + '\'' +
+                ", created='" + created + '\'' +
+                '}';
     }
 }

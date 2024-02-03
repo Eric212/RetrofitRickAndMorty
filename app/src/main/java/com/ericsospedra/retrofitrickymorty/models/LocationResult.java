@@ -16,4 +16,12 @@ public class LocationResult extends Result<Location>{
     public List<Location> getResults() {
         return results;
     }
+
+    @Override
+    public String toString() {
+        return "LocationResult{" +
+                "info=" + info +
+                ", results=" + results +
+                '}';
+    }
 }

@@ -16,4 +16,12 @@ public class CharacterResult extends Result<Character>{
     public List<Character> getResults() {
         return results;
     }
+
+    @Override
+    public String toString() {
+        return "CharacterResult{" +
+                "info=" + info +
+                ", results=" + results +
+                '}';
+    }
 }

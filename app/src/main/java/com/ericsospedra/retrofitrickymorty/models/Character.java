@@ -3,7 +3,7 @@ package com.ericsospedra.retrofitrickymorty.models;
 import java.util.List;
 
 public class Character {
-    private int id;
+    private Integer id;
     private String name;
     private String status;
     private String species;
@@ -30,7 +30,7 @@ public class Character {
         this.url = url;
         this.created = created;
     }
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

@@ -9,9 +9,7 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ericsospedra.retrofitrickymorty.R;
@@ -21,13 +19,12 @@ import com.ericsospedra.retrofitrickymorty.interfaces.IOnClickListener;
 import com.ericsospedra.retrofitrickymorty.models.ApiRickAndMorty;
 import com.ericsospedra.retrofitrickymorty.models.Character;
 import com.ericsospedra.retrofitrickymorty.models.CharacterResult;
-import com.ericsospedra.retrofitrickymorty.models.Result;
-import com.google.gson.internal.LinkedTreeMap;
+import com.ericsospedra.retrofitrickymorty.models.Episode;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,17 +53,18 @@ public class CharacterFragment extends Fragment {
                 if (response.isSuccessful()) {
                     characters =new ArrayList<>();
                     CharacterResult result = response.body();
-                    for(int i = 0; i<=result.getInfo().getPages();i++){
+                    for(int i = 1; i<=result.getInfo().getPages();i++){
                         int finalI = i;
-                        api.getCharacterByPages(i).enqueue(new Callback<CharacterResult>() {
+                        api.getCharactersByPages(i).enqueue(new Callback<CharacterResult>() {
                             @Override
                             public void onResponse(Call<CharacterResult> call, Response<CharacterResult> response) {
                                 characters.addAll(response.body().getResults());
                                 if(finalI == result.getInfo().getPages()){
-                                    RecyclerView rvAuthor = view.findViewById(R.id.rvCharacter);
+                                    Collections.sort(characters, Comparator.comparing(Character::getId));
+                                    RecyclerView rvCharacter = view.findViewById(R.id.rvCharacter);
                                     adapter = new CharacterAdapter(characters, listener);
-                                    rvAuthor.setAdapter(adapter);
-                                    rvAuthor.setLayoutManager(new GridLayoutManager(view.getContext(),3,GridLayoutManager.VERTICAL,false));
+                                    rvCharacter.setAdapter(adapter);
+                                    rvCharacter.setLayoutManager(new GridLayoutManager(view.getContext(),3,GridLayoutManager.VERTICAL,false));
                                     svCharacter = view.findViewById(R.id.svCharacter);
                                     svCharacter.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                                         @Override

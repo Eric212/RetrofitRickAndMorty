@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ericsospedra.retrofitrickymorty.R;
 import com.ericsospedra.retrofitrickymorty.adapters.CharacterLiteAdapter;
+import com.ericsospedra.retrofitrickymorty.adapters.LocationAdapter;
 import com.ericsospedra.retrofitrickymorty.interfaces.IApiService;
 import com.ericsospedra.retrofitrickymorty.interfaces.IOnClickListener;
 import com.ericsospedra.retrofitrickymorty.models.ApiRickAndMorty;
 import com.ericsospedra.retrofitrickymorty.models.Character;
 import com.ericsospedra.retrofitrickymorty.models.Episode;
+import com.ericsospedra.retrofitrickymorty.models.Location;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,46 +31,42 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EpisodeDetailFragment extends Fragment {
+public class LocationDetailFragment extends Fragment {
     public interface IOnAttach{
-        int getEpisodeId();
+        int getLocationId();
     }
-    private ImageView ivEpisodeDetail;
-    private Episode episode;
-    private List<String> charactersString;
+    private int locationId;
     private IOnClickListener listener;
-    private TextView tvEpisodeName;
-    private TextView tvAirDate;
-    private TextView tvEpisode;
-    private RecyclerView rvCharacter;
+    private List<String> charactersString;
+    private ImageView ivLocationDetail;
+    private TextView tvLocationName;
+    private TextView tvLocationType;
+    private TextView tvDimension;
+    private RecyclerView rvLocationCharacters;
     private IApiService api;
-    private int episodeId;
 
-    public EpisodeDetailFragment() {
-        super(R.layout.episode_detail_fragment);
+    public LocationDetailFragment() {
+        super(R.layout.location_detail_fragment);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         api = ApiRickAndMorty.getInstance();
-        charactersString = new ArrayList<>();
-        ivEpisodeDetail = view.findViewById(R.id.ivEpisodeDetail);
-        tvEpisode = view.findViewById(R.id.tvDimension);
-        tvEpisodeName = view.findViewById(R.id.tvEpisodeName);
-        tvAirDate = view.findViewById(R.id.tvLocationType);
-        rvCharacter = view.findViewById(R.id.rvLocationCharacters);
-        api.getEpisodeById(episodeId).enqueue(new Callback<Episode>() {
+        ivLocationDetail = view.findViewById(R.id.ivLocationDetail);
+        tvLocationName = view.findViewById(R.id.tvLocationName);
+        tvLocationType = view.findViewById(R.id.tvLocationType);
+        tvDimension = view.findViewById(R.id.tvDimension);
+        rvLocationCharacters = view.findViewById(R.id.rvLocationCharacters);
+        api.getLocationById(locationId).enqueue(new Callback<Location>() {
             @Override
-            public void onResponse(Call<Episode> call, Response<Episode> response) {
-                episode = response.body();
-                tvEpisode.setText(episode.getEpisode());
-                tvEpisodeName.setText(episode.getName());
-                tvAirDate.setText(episode.getAir_date());
-                charactersString = episode.getCharacters();
-                ivEpisodeDetail.setImageResource(view.getContext().getResources().getIdentifier("episode","drawable",view.getContext().getPackageName()));
-                ivEpisodeDetail.getLayoutParams().width = 550;
-                ivEpisodeDetail.getLayoutParams().height = 550;
+            public void onResponse(Call<Location> call, Response<Location> response) {
+                Location location = response.body();
+                ivLocationDetail.setImageResource(view.getContext().getResources().getIdentifier("r_m_defaullt","drawable",view.getContext().getPackageName()));
+                tvLocationName.setText(location.getName());
+                tvLocationType.setText(location.getType());
+                tvDimension.setText(location.getDimension());
+                charactersString = location.getResidents();
                 List<String> charactersId = new ArrayList<>();
                 List<Character> characters = new ArrayList<>();
                 for(String c : charactersString){
@@ -84,8 +82,8 @@ public class EpisodeDetailFragment extends Fragment {
                             if(s.equals(charactersId.get(charactersId.size()-1))){
                                 Collections.sort(characters, Comparator.comparing(Character::getId));
                                 CharacterLiteAdapter adapter = new CharacterLiteAdapter(characters,listener);
-                                rvCharacter.setAdapter(adapter);
-                                rvCharacter.setLayoutManager(new GridLayoutManager(view.getContext(),3,GridLayoutManager.VERTICAL,false));
+                                rvLocationCharacters.setAdapter(adapter);
+                                rvLocationCharacters.setLayoutManager(new GridLayoutManager(view.getContext(),3,GridLayoutManager.VERTICAL,false));
                             }
                         }
 
@@ -98,18 +96,17 @@ public class EpisodeDetailFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<Episode> call, Throwable t) {
+            public void onFailure(Call<Location> call, Throwable t) {
 
             }
         });
-
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        IOnAttach iOnAttach = (IOnAttach)context;
+        IOnAttach iOnAttach = (IOnAttach) context;
         listener = (IOnClickListener) context;
-        episodeId = iOnAttach.getEpisodeId();
+        locationId = iOnAttach.getLocationId();
     }
 }

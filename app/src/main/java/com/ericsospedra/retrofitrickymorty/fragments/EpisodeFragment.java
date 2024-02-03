@@ -2,6 +2,7 @@ package com.ericsospedra.retrofitrickymorty.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 
@@ -12,15 +13,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ericsospedra.retrofitrickymorty.R;
-import com.ericsospedra.retrofitrickymorty.adapters.CharacterAdapter;
-import com.ericsospedra.retrofitrickymorty.adapters.LocationAdapter;
+import com.ericsospedra.retrofitrickymorty.adapters.EpisodeAdapter;
 import com.ericsospedra.retrofitrickymorty.interfaces.IApiService;
 import com.ericsospedra.retrofitrickymorty.interfaces.IOnClickListener;
 import com.ericsospedra.retrofitrickymorty.models.ApiRickAndMorty;
 import com.ericsospedra.retrofitrickymorty.models.Character;
 import com.ericsospedra.retrofitrickymorty.models.Episode;
-import com.ericsospedra.retrofitrickymorty.models.Location;
-import com.ericsospedra.retrofitrickymorty.models.LocationResult;
+import com.ericsospedra.retrofitrickymorty.models.EpisodeResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,42 +30,40 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LocationFragment extends Fragment {
+public class EpisodeFragment extends Fragment {
     private IOnClickListener listener;
-    private List<Location> locations;
     private IApiService api;
-    private LocationAdapter adapter;
-    private SearchView svLocation;
+    private List<Episode> episodes;
+    private EpisodeAdapter adapter;
+    private SearchView svEpisode;
 
-    public LocationFragment() {
-        super(R.layout.location_fragment);
+    public EpisodeFragment() {
+        super(R.layout.episode_fragment);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         api = ApiRickAndMorty.getInstance();
-        api.getAllLocations().enqueue(new Callback<LocationResult>() {
+        api.getAllEpisodes().enqueue(new Callback<EpisodeResult>() {
             @Override
-            public void onResponse(Call<LocationResult> call, Response<LocationResult> response) {
-                locations = new ArrayList<>();
-                LocationResult result = response.body();
-                for (int i = 1; i <= result.getInfo().getPages(); i++) {
+            public void onResponse(Call<EpisodeResult> call, Response<EpisodeResult> response) {
+                episodes = new ArrayList<>();
+                EpisodeResult result = response.body();
+                for(int i = 1; i<= result.getInfo().getPages();i++){
                     int finalI = i;
-                    api.getLocationsByPages(i).enqueue(new Callback<LocationResult>() {
+                    api.getEpisodesByPages(i).enqueue(new Callback<EpisodeResult>() {
                         @Override
-                        public void onResponse(Call<LocationResult> call, Response<LocationResult> response) {
-                            for(Location location : response.body().getResults()){
-                                locations.add(location);
-                            }
-                            if (finalI == result.getInfo().getPages()) {
-                                Collections.sort(locations, Comparator.comparing(Location::getId));
-                                RecyclerView rvLocation = view.findViewById(R.id.rvLocation);
-                                adapter = new LocationAdapter(locations, listener);
-                                rvLocation.setAdapter(adapter);
-                                rvLocation.setLayoutManager(new GridLayoutManager(view.getContext(),3,GridLayoutManager.VERTICAL,false));
-                                svLocation = view.findViewById(R.id.svLocation);
-                                svLocation.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        public void onResponse(Call<EpisodeResult> call, Response<EpisodeResult> response) {
+                            episodes.addAll(response.body().getResults());
+                            if(finalI == result.getInfo().getPages()){
+                                Collections.sort(episodes, Comparator.comparing(Episode::getId));
+                                RecyclerView rvEpisodes = view.findViewById(R.id.rvEpisodes);
+                                adapter = new EpisodeAdapter(episodes,listener);
+                                rvEpisodes.setAdapter(adapter);
+                                rvEpisodes.setLayoutManager(new GridLayoutManager(view.getContext(),3,GridLayoutManager.VERTICAL,false));
+                                svEpisode = view.findViewById(R.id.svEpisode);
+                                svEpisode.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                                     @Override
                                     public boolean onQueryTextSubmit(String query) {
                                         return false;
@@ -82,7 +79,7 @@ public class LocationFragment extends Fragment {
                         }
 
                         @Override
-                        public void onFailure(Call<LocationResult> call, Throwable t) {
+                        public void onFailure(Call<EpisodeResult> call, Throwable t) {
 
                         }
                     });
@@ -90,7 +87,7 @@ public class LocationFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<LocationResult> call, Throwable t) {
+            public void onFailure(Call<EpisodeResult> call, Throwable t) {
 
             }
         });
